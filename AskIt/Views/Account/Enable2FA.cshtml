@@ -1,0 +1,78 @@
+﻿@model AskIt.Models.ViewModels.Enable2FaPageViewModel
+
+@{
+    ViewData["Title"] = "Abilita Autenticazione a Due Fattori";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-lg rounded-4">
+                <div class="card-body p-4">
+                    <h2 class="mb-4 text-center">@ViewData["Title"]</h2>
+
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["Success"]</div>
+                    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["Error"]</div>
+                    }
+
+                    @if (!Model.SetupInfo.Is2FaEnabled)
+                    {
+                        <p class="text-muted">Scansiona il codice QR con un'app come <strong>Google Authenticator</strong>:</p>
+
+                        <div class="d-flex justify-content-center mb-4">
+                            <div id="qrcode" class="border p-3 rounded-3 shadow-sm bg-light"></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <p><strong>Chiave manuale:</strong></p>
+                            <div class="alert alert-secondary">
+                                <code class="fs-5">@Model.SetupInfo.SharedKey</code>
+                            </div>
+                        </div>
+
+                        <form asp-action="Verify2FA" method="post">
+                            
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-group mb-3">
+                                <label asp-for="Input.Code" class="form-label">Codice di verifica</label>
+                                <input asp-for="Input.Code" name="Code" class="form-control" placeholder="Inserisci il codice dall'app" />
+                                <span asp-validation-for="Input.Code" class="text-danger small"></span>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-shield-lock"></i> Abilita 2FA
+                                </button>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center">
+                            <strong>2FA è già attiva sul tuo account.</strong>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        new QRCode(document.getElementById("qrcode"), {
+            text: "@Model.SetupInfo.AuthenticatorUri",
+            width: 200,
+            height: 200
+        });
+    </script>
+}

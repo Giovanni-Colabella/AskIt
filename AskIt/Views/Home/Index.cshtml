@@ -1,0 +1,99 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="container-fluid bg-light">
+    <div class="text-center py-5">
+        @if (User?.Identity?.IsAuthenticated != true)
+        {
+            <h1 class="display-4 font-weight-bold text-primary">Benvenuto su AskIt</h1>
+            <p class="lead" style="color: black;">Unisciti alla nostra community per imparare, condividere e risolvere
+                problemi nel mondo IT.</p>
+            <div class="mt-4">
+                <a href="/questions" class="btn btn-lg btn-primary px-4 py-2 shadow-sm">Inizia a fare domande</a>
+                <a href="/tags" class="btn btn-lg btn-outline-secondary px-4 py-2 shadow-sm">Esplora i tag</a>
+            </div>
+        }
+        else
+        {
+            <h1 class="display-4 font-weight-bold text-primary">Ehi @User.Identity.Name, rieccoti da queste parti!</h1>
+            <p class="lead text-dark">Hai una domanda che ti frulla in testa o vuoi solo farci sapere quanto sei curioso?
+            </p>
+            <div class="mt-4">
+                <a href="/questions" class="btn btn-lg btn-primary px-4 py-2 shadow-sm">
+                    Spara la tua domanda 💬
+                </a>
+                <a href="/tags" class="btn btn-lg btn-outline-secondary px-4 py-2 shadow-sm">
+                    Fatti un giro tra i tag 🔍
+                </a>
+            </div>
+
+        }
+
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row text-center mb-4">
+        <div class="col">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <h5 class="card-title">Esplora domande</h5>
+                    <p class="card-text">Le domande pubblicate da i nostri membri della community.</p>
+                    <a href="#" class="btn btn-outline-primary">Vedi tutte le domande</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione Domande recenti e popolari -->
+    <div class="row">
+        <div class="col-md-6">
+            <h3 class="font-weight-bold text-primary">Le domande più recenti</h3>
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action">Come posso risolvere un errore di connessione
+                    in C#?</a>
+                <a href="#" class="list-group-item list-group-item-action">Cos'è il polimorfismo in Java?</a>
+                <a href="#" class="list-group-item list-group-item-action">Come posso migliorare la performance di
+                    un'app React?</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h3 class="font-weight-bold text-primary">Domande popolari</h3>
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action">Qual è la differenza tra HTTP e HTTPS?</a>
+                <a href="#" class="list-group-item list-group-item-action">Cosa sono le API REST?</a>
+                <a href="#" class="list-group-item list-group-item-action">Come implementare un sistema di login in
+                    ASP.NET Core?</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Nuova sezione per esplorare i corsi -->
+<div class="container mt-5">
+    <div class="row text-center">
+        <div class="col">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <i class="fas fa-laptop-code fa-3x text-primary"></i>
+                    <h5 class="card-title mt-3">Esplora i nostri corsi</h5>
+                    <p class="card-text">Offriamo corsi su vari argomenti IT per migliorare le tue competenze. Scegli il
+                        corso che più ti interessa e inizia a imparare oggi stesso!</p>
+                    <a href="/courses" class="btn btn-outline-primary">Esplora i corsi</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container text-center mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="font-weight-bold text-primary">Partecipa attivamente alla Community</h3>
+            <p class="lead">Unisciti a migliaia di appassionati e diventa un amministratore della community.</p>
+            <a href="/signup" class="btn btn-lg btn-success shadow-lg">Unisciti a noi</a>
+        </div>
+    </div>
+</div>

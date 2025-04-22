@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "Logout";
+}
+
+<!-- Sezione Contenuto -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <!-- Sezione Header -->
+            <div class="text-center mb-4">
+                <h2 class="display-4 text-danger">Sei sicuro?</h2>
+                <p class="lead">Vuoi davvero uscire dal tuo account?</p>
+            </div>
+            
+            <!-- Form di Logout -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form asp-controller="Account" asp-action="PerformLogout" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="text-center mb-4">
+                            <button type="submit" class="btn btn-lg btn-danger w-100">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Pulsante per annullare il logout -->
+                    <div class="text-center">
+                        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary w-100">Annulla</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+﻿/* Questo CSS serve solo se Bootstrap non gestisce tutto da solo */
+body {
+  background-color: #121212;
+  color: #f8f9fa;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: #f8f9fa;
+}
+
+.navbar-dark .navbar-brand {
+  color: #f8f9fa;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  line-height: 60px;
+  background-color: #343a40;
+  color: #f8f9fa;
+}
+
+.footer a {
+  color: #f8f9fa;
+}
+
+.footer a:hover {
+  color: #007bff;
+}

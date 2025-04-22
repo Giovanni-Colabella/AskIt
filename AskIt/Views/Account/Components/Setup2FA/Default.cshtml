@@ -1,0 +1,23 @@
+﻿@model EnableAuthenticatorViewModel
+
+<div class="card shadow-sm mb-3">
+    <div class="card-header">
+        <h5 class="mb-0">Autenticazione a Due Fattori</h5>
+    </div>
+    <div class="card-body">
+        @if (Model.Is2FaEnabled)
+        {
+            <p class="text-success">La 2FA è attiva per questo account.</p>
+            <form asp-action="Disable2FA" method="post">
+                <button type="submit" class="btn btn-outline-danger">Disattiva 2FA</button>
+            </form>
+        }
+        else
+        {
+            <p class="text-warning">La 2FA non è attiva per questo account.</p>
+            <a asp-action="Enable2FA"
+                class="btn btn-outline-primary">Attiva 2FA 
+            </a>
+        }
+    </div>
+</div>

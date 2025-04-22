@@ -1,0 +1,41 @@
+﻿@model AskIt.Models.InputModels.VerifyAuthenticatorCodeInputModel
+
+@{
+    ViewData["Title"] = "Inserisci codice 2FA";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card shadow-lg rounded-4">
+                <div class="card-body p-4">
+                    <h2 class="mb-4 text-center">Inserisci il codice di autenticazione 2FA</h2>
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["Error"]</div>
+                    }
+
+                    <form asp-action="SignInWith2FA" method="post">
+                        @Html.AntiForgeryToken()
+                        
+                        <!--Errori globali-->
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Code" class="form-label">Codice di verifica</label>
+                            <input asp-for="Code" name="Code" class="form-control" placeholder="123 456" autocomplete="one-time-code" />
+                            <span asp-validation-for="Code" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-shield-check"></i> Verifica Codice
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

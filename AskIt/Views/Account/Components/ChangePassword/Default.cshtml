@@ -1,0 +1,36 @@
+﻿
+@model AskIt.Models.InputModels.ChangePasswordInputModel
+
+<div class="card">
+    <div class="card-header">
+        <h3>Modifica Password</h3>
+    </div>
+    <div class="card-body">
+        <form asp-action="ChangePassword" asp-controller="Account" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="alert alert-danger" asp-validation-summary="ModelOnly"></div>
+
+            <div class="form-group">
+                <label asp-for="OldPassword">Password Corrente</label>
+                <input asp-for="OldPassword" class="form-control mb-2" type="password"/>
+                <span asp-validation-for="OldPassword" class="text-danger"></span>
+            </div>
+
+           <div class="form-group">
+                <label asp-for="NewPassword">Nuova Password</label>
+                <input asp-for="NewPassword" class="form-control mb-2" type="password"/>
+                <span asp-validation-for="NewPassword" class="text-danger"></span>
+           </div>
+
+            <div class="form-group">
+                <label asp-for="ConfirmPassword">Conferma Password</label>
+                <input asp-for="ConfirmPassword" class="form-control mb-2" type="password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Modifica Password</button>
+            </div>
+        </form>
+    </div>
+</div>

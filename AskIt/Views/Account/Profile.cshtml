@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Profilo";
+}
+
+<h2 class="mb-4 text-center">Il tuo profilo</h2>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    @await Component.InvokeAsync("ChangePassword")
+                </div>
+            </div>
+
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    @await Component.InvokeAsync("Setup2FA")
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

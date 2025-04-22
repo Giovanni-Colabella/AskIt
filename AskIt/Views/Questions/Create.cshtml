@@ -1,0 +1,45 @@
+﻿@model CreateQuestionInputModel
+@{
+    ViewData["Title"] = "Fai una domanda";
+}
+
+<h2 class="mb-4 text-center">Fai una domanda</h2>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+
+            <form asp-action="Create" method="post" class="needs-validation" novalidate>
+
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label fw-semibold">Titolo</label>
+                    <input asp-for="Title" class="form-control" placeholder="Es. Come si usa Entity Framework in ASP.NET Core?" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Body" class="form-label fw-semibold">Descrizione dettagliata</label>
+                    <textarea asp-for="Body" class="form-control" rows="8" placeholder="Scrivi qui i dettagli del tuo problema..."></textarea>
+                    <span asp-validation-for="Body" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Tags" class="form-label fw-semibold">Tag</label>
+                    <input asp-for="Tags" class="form-control" placeholder="Es. asp.net, c#, mvc" />
+                    <div class="form-text">Usa virgole per separare i tag.</div>
+                    <span asp-validation-for="Tags" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-primary w-100 w-md-auto">
+                        <i class="bi bi-send-fill me-1"></i> Pubblica domanda
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
