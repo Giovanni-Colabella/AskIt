@@ -21,4 +21,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Question> Questions { get; set; } 
     public DbSet<Answer> Answers { get; set; } 
+    public DbSet<Course> Courses { get; set; }
 }

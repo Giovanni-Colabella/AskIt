@@ -6,6 +6,7 @@ using AskIt.Models.Customizations.Helpers;
 using AskIt.Models.Data.Entities;
 using AskIt.Models.Enums;
 using AskIt.Models.InputModels;
+using AskIt.Models.InputModels.AccountModels;
 using AskIt.Models.ViewModels;
 
 using Microsoft.AspNetCore.Identity;
@@ -44,6 +45,18 @@ namespace AskIt.Models.Services.Application.Account
                 return Result<LoginSuccessViewModel, LoginError>.Failure(LoginError.InvalidCredentials);
 
             _logger.LogInformation($"Indirizzo {model.Email} ha effettuato l'accesso al suo account");
+
+            // Verifica se l'utente ha un ruolo assegnato, se non ha un ruolo, gli assegna il ruolo di User
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Count == 0 || !roles.Contains(nameof(Roles.User)))
+            {
+                var roleResult = await _userManager.AddToRoleAsync(user, nameof(Roles.User));
+                if (!roleResult.Succeeded)
+                {
+                    _logger.LogError($"Errore assegnazione ruolo: {string.Join(", ", roleResult.Errors.Select(e => e.Description))}");
+                    return Result<LoginSuccessViewModel, LoginError>.Failure(LoginError.GenericError);
+                }
+            }
 
             var viewModel = new LoginSuccessViewModel
             {

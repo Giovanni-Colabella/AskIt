@@ -1,5 +1,6 @@
 using AskIt.Models.Customizations.Errors;
 using AskIt.Models.InputModels;
+using AskIt.Models.InputModels.AccountModels;
 using AskIt.Models.Services.Application.Account;
 using AskIt.Models.ViewModels;
 
@@ -31,25 +32,31 @@ namespace AskIt.Controllers
 
             var result = await _authService.LoginAsync(model);
 
-            var response = result.Match<IActionResult>(
-                success => RedirectToAction("Index", "Home"),
-                error =>
+            IActionResult response;
+
+            if (result.IsSuccess)
+            {
+                response = RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                switch (result.Error)
                 {
-                    switch (error)
-                    {
-                        case LoginError.InvalidCredentials:
-                            ModelState.AddModelError(string.Empty, "Email o password non validi");
-                            return View(model);
+                    case LoginError.InvalidCredentials:
+                        ModelState.AddModelError(string.Empty, "Email o password non validi");
+                        response = View(model);
+                        break;
 
-                        case LoginError.TwoFactorRequired:
-                            return RedirectToAction(nameof(SignInWith2FA));
+                    case LoginError.TwoFactorRequired:
+                        response = RedirectToAction(nameof(SignInWith2FA));
+                        break;
 
-                        default:
-                            ModelState.AddModelError(string.Empty, "Errore generico durante il login");
-                            return View(model);
-                    }
+                    default:
+                        ModelState.AddModelError(string.Empty, "Errore generico durante il login");
+                        response = View(model);
+                        break;
                 }
-            );
+            }
 
             return response;
         }
@@ -74,7 +81,7 @@ namespace AskIt.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            switch (registrationResult.ErrorValue)
+            switch (registrationResult.Error)
             {
                 case RegistrationError.EmailAlreadyExisting:
                     ModelState.AddModelError(string.Empty, "L'indirizzo scelto è già in uso");
@@ -102,12 +109,6 @@ namespace AskIt.Controllers
         {
             await _authService.LogoutAsync();
             return RedirectToAction("Index", "Home");
-        }
-
-        [HttpGet]
-        public IActionResult AccessDenied()
-        {
-            return View();
         }
 
         [HttpGet]

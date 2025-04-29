@@ -12,8 +12,8 @@ public class Question
     public int Likes { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-    public string AuthorId { get; set; } = string.Empty;
-    public ApplicationUser Author { get; set; } = new ApplicationUser();
+    public required string AuthorId { get; set; } = string.Empty;
+    public  ApplicationUser Author { get; set; } = null!;
     public ICollection<Answer> Answers { get; set; } = new List<Answer>();
     public QuestionStatus Status { get; set; }
 }

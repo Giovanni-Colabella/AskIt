@@ -4,6 +4,9 @@ public enum QuestionError
 {
     CreateFailed,
     NotFound,
+    NoQuestionsFound,
     CouldNotDelete,
     Unauthorized,
+    SaveFailed,
+    GenericError
 }

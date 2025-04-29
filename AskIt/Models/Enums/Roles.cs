@@ -7,5 +7,7 @@ public enum Roles
     [Display(Name = "User")]
     User,
     [Display(Name = "Admin")]
-    Admin
+    Admin,
+    [Display(Name = "Docente")]
+    Docente
 }

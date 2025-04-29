@@ -2,9 +2,10 @@ using AskIt.Models.Authorization;
 using AskIt.Models.Customizations.Helpers;
 using AskIt.Models.Data;
 using AskIt.Models.Data.Entities;
-using AskIt.Models.Enums;
 using AskIt.Models.Services.Application.Account;
-using AskIt.Models.Services.Application.QuestionService;
+using AskIt.Models.Services.Application.CourseService;
+using AskIt.Models.Services.Application.ForumService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,29 +25,38 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.ConfigureApplicationCookie(options => {
     options.LoginPath = "/Account/Login";
     options.LogoutPath = "/Account/Logout";
-    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.AccessDeniedPath = "/Error/UnauthorizedError";
 });
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy(nameof(Policies.CanDeleteQuestion), policy =>
-    {
-        policy.Requirements.Add(new DeleteQuestionRequirement());
-    });
+    // Registrazione varie policy 
 });
+// Registra Authorization Handlers
+builder.Services.AddScoped<IAuthorizationHandler, DeleteAnswerHandler>(); // Scoped perch� dipende da un servizio dbContext
+builder.Services.AddSingleton<IAuthorizationHandler, DeleteQuestionHandler>(); // Singleton, non dipende da un servizio dbContext
 
+// Servizi ASP.Net 
+builder.Services.AddMemoryCache();
 builder.Services.AddAutoMapper(typeof(Program));
-
 builder.Services.AddHttpContextAccessor();
 
+// Servizi Applicativi e Infrastrutturali
 builder.Services.AddScoped<IAuthService, EfCoreAuthService>();
-builder.Services.AddScoped<IQuestionService, EfCoreQuestionService>();
+builder.Services.AddScoped<IForumService, ForumService>();
+builder.Services.AddScoped<ICachedForumService, MemoryCacheForumService>();
+builder.Services.AddScoped<ICourseService, EfCoreCourseService>();
 
 var app = builder.Build();
 
+using(var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await IdentityDataInitializer.SeedRoles(services);
+}
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
 
@@ -63,15 +73,13 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
-using(var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    await IdentityDataInitializer.SeedRoles(services);
-}
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+app.MapControllerRoute(
+    name: "forum",
+    pattern: "{controller=Forum}/{action=Index}/{id?}");
 
 app.Run();

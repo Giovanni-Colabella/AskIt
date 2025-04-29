@@ -3,6 +3,7 @@
     public enum LoginError
     {
         InvalidCredentials,
-        TwoFactorRequired
+        TwoFactorRequired,
+        GenericError,
     }
 }

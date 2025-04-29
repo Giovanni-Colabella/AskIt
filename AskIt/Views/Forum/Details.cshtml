@@ -1,0 +1,134 @@
+@using AskIt.Models.Authorization
+@using AskIt.Models.Data.Entities
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+
+@model QuestionViewModel
+@inject UserManager<ApplicationUser> UserManager
+@inject IAuthorizationService AuthorizationService
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<!-- Container principale con max-width largo tipo StackOverflow -->
+<div class="container-fluid py-5">
+    <div class="mx-auto" style="max-width: 1000px;">
+
+        <!-- Domanda -->
+        <div class="mb-5 pb-4 border-bottom">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h1 class="fw-bold text-primary mb-3">@Model.Title</h1>
+                    <p class="lead text-muted">@Model.Body</p>
+                </div>
+
+                @{
+                    var question = new Question
+                    {
+                        Id = Model.Id,
+                        AuthorId = Model.AuthorId
+                    };
+                    var authDeleteQuestionResult = await AuthorizationService.AuthorizeAsync(User, question, new DeleteQuestionRequirement());
+                }
+
+                @if (authDeleteQuestionResult.Succeeded)
+                {
+                    <a asp-action="DeleteQuestionPage" asp-route-questionId="@Model.Id" class="btn btn-light border rounded-pill px-3 shadow-sm">
+                        <i class="bi bi-trash me-1"></i> Elimina
+                    </a>
+                }
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-3 small text-muted">
+                <div>
+                    <span>Risposte: @Model.Answers.Count</span>
+                </div>
+                <div>
+                    <span>Postato il @Model.CreatedAt.ToString("dd/MM/yyyy")</span> |
+                    <span class="ms-2"><i class="bi bi-person-circle"></i> @Model.AuthorName</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risposte -->
+        <div class="mb-5">
+            <h2 class="h5 mb-4 fw-bold ">Risposte</h2>
+
+            @if (!Model.Answers.Any())
+            {
+                <div class="text-center text-muted fst-italic">
+                    Nessuna risposta ancora. Sii il primo a rispondere!
+                </div>
+            }
+            else
+            {
+                @foreach (var answer in Model.Answers)
+                {
+                    var user = await UserManager.GetUserAsync(User);
+
+                    var answerEntity = new Answer
+                    {
+                        Id = answer.Id,
+                        Body = answer.Body,
+                        CreatedAt = answer.CreatedAt,
+                        AuthorId = answer.AuthorId,
+                        QuestionId = Model.Id
+                    };
+
+                    var authResult = await AuthorizationService.AuthorizeAsync(User, answerEntity, new DeleteAnswerRequirement());
+
+                    <div class="p-4 mb-4 border rounded-3 shadow-sm">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <i class="bi bi-person-circle text-primary" style="font-size: 2rem;"></i>
+                                </div>
+                                <div>
+                                    <strong class="">@await UserManager.FindByIdAsync(answer.AuthorId)</strong><br />
+                                    <small class="text-muted">@answer.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                                </div>
+                            </div>
+
+                            @if (authResult.Succeeded)
+                            {
+                                <form asp-action="DeleteAnswer" asp-route-id="@answer.Id" method="post" class="ms-3">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            }
+                        </div>
+
+                        <p class="fs-5  mb-0">@answer.Body</p>
+                    </div>
+                }
+            }
+        </div>
+
+        <!-- Aggiungi risposta -->
+        <div>
+            <h3 class="h5 mb-3">Scrivi una risposta</h3>
+            <form asp-action="AddAnswer" method="post" class="p-4  rounded-3 border shadow-sm">
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <input type="hidden" asp-for="AnswerInputModel.QuestionId" value="@Model.Id" />
+
+                <div class="mb-3">
+                    <textarea asp-for="AnswerInputModel.Body" class="form-control form-control-lg" rows="5" placeholder="Scrivi la tua risposta..." style="resize: none;"></textarea>
+                    <span asp-validation-for="AnswerInputModel.Body" class="text-danger"></span>
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4">
+                        <i class="bi bi-send"></i> Invia
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

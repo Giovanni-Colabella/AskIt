@@ -2,6 +2,7 @@
 {
     public enum Policies
     {
-        CanDeleteQuestion
+        CanDeleteQuestion,
+        CanDeleteAnswer
     }
 }

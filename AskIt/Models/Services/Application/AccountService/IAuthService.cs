@@ -1,6 +1,7 @@
 ﻿using AskIt.Models.Customizations.Errors;
 using AskIt.Models.Customizations.Helpers;
 using AskIt.Models.InputModels;
+using AskIt.Models.InputModels.AccountModels;
 using AskIt.Models.ViewModels;
 
 namespace AskIt.Models.Services.Application.Account

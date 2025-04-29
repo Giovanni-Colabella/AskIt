@@ -1,4 +1,5 @@
 using AskIt.Models.Customizations.Exceptions.Account;
+using AskIt.Models.Customizations.Exceptions.Course;
 using AskIt.Models.Customizations.Exceptions.Question;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,12 @@ namespace AskIt.Controllers
             _logger = logger;
         }
 
+        public IActionResult UnauthorizedError()
+        {
+            ViewData["Title"] = "Utente non autorizzato";
+            return View();
+        }
+
         // GET: ErrorController
         public IActionResult Index()
         {
@@ -23,7 +30,9 @@ namespace AskIt.Controllers
             return error switch
             {
                 AccountNotFoundException => HandleError("Utente non trovato", 404, "AccountNotFoundError"),
+                UnauthorizedException  => HandleError("Utente non autorizzato", 401, "UnauthorizedError"),
                 QuestionNotFoundException e => HandleError("Nessuna domanda tovata", 404, "QuestionNotFoundError", e.Message),
+                CourseNotFoundException e => HandleError("Corso non trovato", 404, "CourseNotFoundError", e.Message),
                 _ => HandleError("Errore imprevisto", 500, "Index")
             };
         }

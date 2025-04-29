@@ -9,8 +9,8 @@ public class Answer
     public string Body { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-    public int QuestionId { get; set; }
-    public Question Question { get; set; } = new Question();
-    public string AuthorId { get; set; } = string.Empty;
-    public ApplicationUser Author { get; set; } = new ApplicationUser();
+    public required int QuestionId { get; set; }
+    public  Question Question { get; set; } = null!;
+    public required string AuthorId { get; set; } 
+    public ApplicationUser Author { get; set; } = null!;
 }

@@ -1,67 +1,70 @@
 namespace AskIt.Models.Customizations.Helpers;
 
-public class Result<TSuccess, TError>
+public readonly struct Result<T, E> 
 {
     public bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
+    public T Value => IsSuccess
+        ? _value!
+        : throw new InvalidOperationException("No value present on failure.");
+    public E Error => IsFailure
+        ? _error!
+        : throw new InvalidOperationException("No error present on success.");
 
-    public TSuccess SuccessValue { get; } = default!;
-    public TError ErrorValue { get; } = default!;
+    private readonly T? _value;
+    private readonly E? _error;
 
-    private Result(bool isSuccess, TSuccess successValue, TError errorValue)
+    private Result(bool isSuccess, T? value, E? error)
     {
         IsSuccess = isSuccess;
-        SuccessValue = successValue;
-        ErrorValue = errorValue;
+        _value = value;
+        _error = error;
     }
 
-    // Metodo per creare un risultato di successo
-    public static Result<TSuccess, TError> Success(TSuccess successValue)
-    {
-        return new Result<TSuccess, TError>(true, successValue, default!);
-    }
+    public static Result<T, E> Success(T value) =>
+        new Result<T, E>(true, value, default);
 
-    // Metodo per creare un risultato di errore
-    public static Result<TSuccess, TError> Failure(TError errorValue)
-    {
-        return new Result<TSuccess, TError>(false, default!, errorValue);
-    }
+    public static Result<T, E> Failure(E error) =>
+        new Result<T, E>(false, default, error);
 
-    // Metodo Match per gestire i risultati
-    public TResult Match<TResult>(Func<TSuccess, TResult> onSuccess, Func<TError, TResult> onFailure)
-    {
-        return IsSuccess ? onSuccess(SuccessValue) : onFailure(ErrorValue);
-    }
+    public TResult Match<TResult>(Func<T, TResult> onSuccess, Func<E, TResult> onFailure) =>
+        IsSuccess ? onSuccess(Value) : onFailure(Error);
 }
 
-public class Result<TError>
+
+public readonly struct Result<TError>
 {
     public bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
 
-    public TError ErrorValue { get; } = default!;
+    public TError Error => IsFailure
+        ? _error!
+        : throw new InvalidOperationException("Cannot access error on success");
 
-    private Result(bool isSuccess, TError errorValue)
+    private readonly TError? _error;
+
+    private Result(bool isSuccess, TError? error)
     {
         IsSuccess = isSuccess;
-        ErrorValue = errorValue;
+        _error = error;
     }
 
-    // Metodo per creare un risultato di successo
-    public static Result<TError> Success()
+    public static Result<TError> Success() => new Result<TError>(true, default);
+
+    public static Result<TError> Failure(TError error) => new Result<TError>(false, error);
+
+    public TResult Match<TResult>(Func<TResult> onSuccess, Func<TError, TResult> onFailure) =>
+        IsSuccess ? onSuccess() : onFailure(Error);
+
+    public Result<TError> OnSuccess(Action action)
     {
-        return new Result<TError>(true, default!);
+        if (IsSuccess) action();
+        return this;
     }
 
-    // Metodo per creare un risultato di errore
-    public static Result<TError> Failure(TError errorValue)
+    public Result<TError> OnFailure(Action<TError> action)
     {
-        return new Result<TError>(false, errorValue);
-    }
-
-    // Metodo Match per gestire i risultati
-    public TResult Match<TResult>(Func<TResult> onSuccess, Func<TError, TResult> onFailure)
-    {
-        return IsSuccess ? onSuccess() : onFailure(ErrorValue);
+        if (IsFailure) action(Error);
+        return this;
     }
 }

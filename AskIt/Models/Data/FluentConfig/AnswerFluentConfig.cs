@@ -11,7 +11,8 @@ public class AnswerFluentConfig : IEntityTypeConfiguration<Answer>
         builder.HasOne(a => a.Author)
             .WithMany(u => u.Answers)
             .HasForeignKey(a => a.AuthorId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired();
     }
 }
 

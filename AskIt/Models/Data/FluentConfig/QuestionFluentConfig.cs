@@ -12,7 +12,9 @@ public class QuestionFluentConfig : IEntityTypeConfiguration<Question>
         builder.HasOne(q => q.Author)
             .WithMany(u => u.Questions)
             .HasForeignKey(q => q.AuthorId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
+        
 
         builder.Property(q => q.Status).HasDefaultValue(QuestionStatus.Open);
         builder.Property(q => q.Status).HasConversion<string>();   

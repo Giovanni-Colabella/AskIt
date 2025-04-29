@@ -11,7 +11,7 @@
             <p class="lead" style="color: black;">Unisciti alla nostra community per imparare, condividere e risolvere
                 problemi nel mondo IT.</p>
             <div class="mt-4">
-                <a href="/questions" class="btn btn-lg btn-primary px-4 py-2 shadow-sm">Inizia a fare domande</a>
+                <a asp-controller="Forum" asp-action="Index" class="btn btn-lg btn-primary px-4 py-2 shadow-sm">Inizia a fare domande</a>
                 <a href="/tags" class="btn btn-lg btn-outline-secondary px-4 py-2 shadow-sm">Esplora i tag</a>
             </div>
         }
@@ -21,7 +21,7 @@
             <p class="lead text-dark">Hai una domanda che ti frulla in testa o vuoi solo farci sapere quanto sei curioso?
             </p>
             <div class="mt-4">
-                <a href="/questions" class="btn btn-lg btn-primary px-4 py-2 shadow-sm">
+                <a asp-controller="Forum" asp-action="Index" class="btn btn-lg btn-primary px-4 py-2 shadow-sm">
                     Spara la tua domanda 💬
                 </a>
                 <a href="/tags" class="btn btn-lg btn-outline-secondary px-4 py-2 shadow-sm">
@@ -41,7 +41,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Esplora domande</h5>
                     <p class="card-text">Le domande pubblicate da i nostri membri della community.</p>
-                    <a href="#" class="btn btn-outline-primary">Vedi tutte le domande</a>
+                    <a asp-controller="Forum" asp-action="Index" class="btn btn-outline-primary">Vedi tutte le domande</a>
                 </div>
             </div>
         </div>

@@ -1,0 +1,26 @@
+﻿@model int
+@{
+    ViewData["Title"] = "Cancella domanda";
+}
+
+<div class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg border-0 rounded-4 p-5 text-center" style="max-width: 500px; width: 100%;">
+        <h1 class="mb-4 text-danger fw-bold">@ViewData["Title"]</h1>
+        <p class="fs-5 text-muted mb-5">
+            Sei sicuro di voler cancellare questa domanda? Questa azione non può essere annullata.
+        </p>
+
+        <form asp-action="DeleteQuestion" method="post" asp-route-questionId="@Model">
+            @Html.AntiForgeryToken()
+
+            <div class="d-flex justify-content-center gap-3">
+                <button type="submit" class="btn btn-danger btn-lg px-4">
+                    <i class="bi bi-trash me-2"></i> Conferma
+                </button>
+                <a asp-action="Details" asp-route-id="@Model" class="btn btn-secondary btn-lg px-4">
+                    <i class="bi bi-arrow-left me-2"></i> Annulla
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

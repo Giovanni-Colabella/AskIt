@@ -1,0 +1,44 @@
+﻿@model CreateCourseInputModel
+
+@{
+    ViewData["Title"] = "Crea Corso";
+}
+
+<h1 class="mb-4"><i class="fas fa-plus-circle"></i> Crea Corso</h1>
+
+<form asp-action="Create" method="post">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div asp-validation-summary="All" class="alert alert-danger"></div>
+    }
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label asp-for="CourseName" class="form-label"></label>
+        <input asp-for="CourseName" class="form-control" />
+        <span asp-validation-for="CourseName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CourseDescription" class="form-label"></label>
+        <textarea asp-for="CourseDescription" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="CourseDescription" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label"></label>
+        <div class="input-group">
+            <span class="input-group-text">€</span>
+            <input asp-for="Price" class="form-control" type="number" step="0.01" min="3" max="10000" />
+        </div>
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i> Salva
+    </button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">
+        <i class="fas fa-arrow-left"></i> Annulla
+    </a>
+</form>
