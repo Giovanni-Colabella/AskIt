@@ -30,5 +30,6 @@ public record class CreateCourseInputModel
     [Display(Name = "Prezzo del Corso")]
     public decimal Price { get; set; } = 0.0m;
 
+    
     public IFormFile? CourseImage { get; set; } 
 }
