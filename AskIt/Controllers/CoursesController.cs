@@ -1,5 +1,7 @@
+using AskIt.Models.Authorization;
 using AskIt.Models.Customizations.Errors;
 using AskIt.Models.Customizations.Exceptions.Course;
+using AskIt.Models.Customizations.Exceptions.Image;
 using AskIt.Models.Enums;
 using AskIt.Models.InputModels.CourseInputModels;
 using AskIt.Models.Services.Application.CourseService;
@@ -42,29 +44,48 @@ public class CoursesController : Controller
     [ValidateAntiForgeryToken]
     [Authorize(Roles = nameof(Roles.Docente))]
     public async Task<IActionResult> Create(CreateCourseInputModel inputModel)
-    { 
-        if(!ModelState.IsValid)
+    {
+        if (!ModelState.IsValid)
             return View(inputModel);
 
-        var result = await _courseService.CreateCourseAsync(inputModel);
-        var response = result.Match<IActionResult>(
-            success => RedirectToAction(nameof(Index)),
-            error => 
-            {
-                switch(error)
+        try
+        {
+            var result = await _courseService.CreateCourseAsync(inputModel);
+            var response = result.Match<IActionResult>(
+                success => RedirectToAction(nameof(Index)),
+                error =>
                 {
-                    case CourseError.CreationFailed:
-                        ModelState.AddModelError(string.Empty, "Si è verificato un errore durante la creazione del corso.");
-                        break;
-                    default:
-                        throw new Exception("Si è verificato un errore imprevisto durante la creazione del corso.");
+                    switch (error)
+                    {
+                        case CourseError.CreationFailed:
+                            ModelState.AddModelError(string.Empty, "Si è verificato un errore durante la creazione del corso.");
+                            break;
+                        default:
+                            throw new Exception("Si è verificato un errore imprevisto durante la creazione del corso.");
+                    }
+
+                    return View(inputModel);
                 }
+            );
 
-                return View(inputModel);
-            }
-        );
+            return response;
+        }
+        catch(InvalidImageFormatException)
+        {
+            ModelState.AddModelError(string.Empty, "Il formato dell'immagine non è valido. Assicurati di caricare un'immagine JPEG o PNG.");
+            return View(inputModel);
+        } 
+        catch (ImagePersistenceException)
+        {
+            ModelState.AddModelError(string.Empty, $"Si è verificato un errore durante il caricamento dell'immagine. Riprova. ");
+            return View(inputModel);
+        }
+        catch (Exception)
+        {
+            ModelState.AddModelError(string.Empty, "Si è verificato un errore imprevisto.");
+            return View(inputModel);
+        }
 
-        return response;
     }
 
 }

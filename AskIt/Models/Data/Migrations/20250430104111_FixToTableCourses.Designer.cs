@@ -4,6 +4,7 @@ using AskIt.Models.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AskIt.Models.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250430104111_FixToTableCourses")]
+    partial class FixToTableCourses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,10 +149,6 @@ namespace AskIt.Models.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("CourseDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -175,8 +174,6 @@ namespace AskIt.Models.Data.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
 
                     b.ToTable("Courses");
                 });
@@ -375,17 +372,6 @@ namespace AskIt.Models.Data.Migrations
                     b.Navigation("Question");
                 });
 
-            modelBuilder.Entity("AskIt.Models.Data.Entities.Course", b =>
-                {
-                    b.HasOne("AskIt.Models.Data.Entities.ApplicationUser", "Author")
-                        .WithMany("Courses")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-                });
-
             modelBuilder.Entity("AskIt.Models.Data.Entities.Question", b =>
                 {
                     b.HasOne("AskIt.Models.Data.Entities.ApplicationUser", "Author")
@@ -451,8 +437,6 @@ namespace AskIt.Models.Data.Migrations
             modelBuilder.Entity("AskIt.Models.Data.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("Answers");
-
-                    b.Navigation("Courses");
 
                     b.Navigation("Questions");
                 });

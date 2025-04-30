@@ -1,6 +1,6 @@
-using System;
 using AskIt.Models.Data.Entities;
 using AskIt.Models.Enums;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,6 +17,14 @@ public class CourseFluentConfig : IEntityTypeConfiguration<Course>
         builder.Property(c => c.Price)
             .HasPrecision(18, 2)
             .IsRequired();
+        
+        builder.Property(c => c.AuthorId)
+            .IsRequired();
+
+        builder.HasOne(c => c.Author)
+            .WithMany(u => u.Courses)
+            .HasForeignKey(c => c.AuthorId)
+            .OnDelete(DeleteBehavior.Cascade);
         
     }
 }

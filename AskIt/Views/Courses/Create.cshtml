@@ -6,40 +6,103 @@
 
 <h1 class="mb-4"><i class="fas fa-plus-circle"></i> Crea Corso</h1>
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post" enctype="multipart/form-data">
     @if (!ViewData.ModelState.IsValid)
     {
         <div asp-validation-summary="All" class="alert alert-danger"></div>
     }
     @Html.AntiForgeryToken()
 
+    <!-- Nome del corso -->
     <div class="mb-3">
-        <label asp-for="CourseName" class="form-label"></label>
-        <input asp-for="CourseName" class="form-control" />
+        <label asp-for="CourseName" class="form-label">Nome Corso</label>
+        <input asp-for="CourseName" class="form-control" placeholder="Inserisci il nome del corso" />
         <span asp-validation-for="CourseName" class="text-danger"></span>
     </div>
 
+    <!-- Descrizione del corso -->
     <div class="mb-3">
-        <label asp-for="CourseDescription" class="form-label"></label>
-        <textarea asp-for="CourseDescription" class="form-control" rows="4"></textarea>
+        <label asp-for="CourseDescription" class="form-label">Descrizione Corso</label>
+        <textarea asp-for="CourseDescription" class="form-control" rows="4" data-summernote placeholder="Inserisci una descrizione dettagliata del corso"></textarea>
         <span asp-validation-for="CourseDescription" class="text-danger"></span>
     </div>
 
+    <!-- Prezzo del corso -->
     <div class="mb-3">
-        <label asp-for="Price" class="form-label"></label>
+        <label asp-for="Price" class="form-label">Prezzo (€)</label>
         <div class="input-group">
             <span class="input-group-text">€</span>
-            <input asp-for="Price" class="form-control" type="number" step="0.01" min="3" max="10000" />
+            <input asp-for="Price" class="form-control" type="number" step="0.01" min="3" max="10000" placeholder="Inserisci il prezzo del corso" />
         </div>
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
 
+    <!-- Caricamento immagine -->
+    <div class="mb-3">
+        <label asp-for="CourseImage" class="form-label">Carica un'immagine del corso (JPEG, PNG max 2MB)</label>
 
+        <!-- Input file per caricare l'immagine -->
+        <input asp-for="CourseImage" class="form-control" type="file" accept="image/jpeg, image/png" id="courseImage" onchange="previewImage(event)" />
 
-    <button type="submit" class="btn btn-primary">
-        <i class="fas fa-save"></i> Salva
-    </button>
-    <a asp-action="Index" class="btn btn-secondary ms-2">
-        <i class="fas fa-arrow-left"></i> Annulla
-    </a>
+        <!-- Mostra un'anteprima dell'immagine selezionata -->
+        <div id="imagePreview" class="mt-2" style="display:none;">
+            <h5>Anteprima immagine:</h5>
+            <img id="imagePreviewImg" src="" alt="Anteprima" class="img-fluid" style="max-width: 300px;" />
+        </div>
+
+        <!-- Messaggi di errore -->
+        <div id="errorMessage" class="text-danger mt-2" style="display:none;"></div>
+    </div>
+
+    <!-- Pulsante di submit -->
+    <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Salva
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Annulla
+        </a>
+    </div>
 </form>
+
+<script>
+    // Funzione per visualizzare l'anteprima dell'immagine
+    function previewImage(event) {
+        const file = event.target.files[0];
+        const errorMessage = document.getElementById('errorMessage');
+        const imagePreview = document.getElementById('imagePreview');
+        const imagePreviewImg = document.getElementById('imagePreviewImg');
+
+        // Rimuovi qualsiasi messaggio di errore precedente
+        errorMessage.style.display = 'none';
+
+        if (file) {
+            // Controlla la dimensione del file
+            if (file.size > 2 * 1024 * 1024) { // Limite di 2MB
+                errorMessage.innerText = "Il file è troppo grande. La dimensione massima è 2MB.";
+                errorMessage.style.display = 'block';
+                imagePreview.style.display = 'none';
+                return;
+            }
+
+            // Controlla il tipo MIME
+            const validTypes = ['image/jpeg', 'image/png'];
+            if (!validTypes.includes(file.type)) {
+                errorMessage.innerText = "Il tipo di file non è valido. Sono ammessi solo JPEG e PNG.";
+                errorMessage.style.display = 'block';
+                imagePreview.style.display = 'none';
+                return;
+            }
+
+            // Visualizza l'anteprima dell'immagine
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreviewImg.src = e.target.result;
+                imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.style.display = 'none';
+        }
+    }
+</script>

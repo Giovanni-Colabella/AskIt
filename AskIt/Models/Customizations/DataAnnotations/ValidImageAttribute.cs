@@ -22,7 +22,7 @@ public class ValidImageAttribute : ValidationAttribute
         try 
         {
             using var image = new MagickImage(file.OpenReadStream());
-            if(image.Format != MagickFormat.Jpeg && image.Format != MagickFormat.Png)
+            if(image.Format != MagickFormat.Jpg && image.Format != MagickFormat.Png)
                 return new ValidationResult($"Il formato dell'immagine non è supportato.");
 
         }

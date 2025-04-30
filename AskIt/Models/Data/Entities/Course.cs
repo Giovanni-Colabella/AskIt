@@ -12,14 +12,17 @@ public class Course
     public string? CourseImage { get; set; } 
     [Range(0, 5000, ErrorMessage = "Il prezzo deve essere compreso tra 3 e 5000 euro.")]
     public decimal Price { get; set; } = 0;
+    public string AuthorId { get; set; } 
+    public ApplicationUser Author { get; set; } = null!;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public CourseStatus CourseStatus { get; private set; } 
 
 
-    public Course(string CourseName, decimal Price)
+    public Course(string CourseName, string AuthorId, decimal Price)
     {
         this.CourseName = CourseName;
         this.Price = Price;
+        this.AuthorId = AuthorId;
     }
 
     /// <summary>

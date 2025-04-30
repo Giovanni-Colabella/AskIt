@@ -20,12 +20,12 @@ public static class CourseMapping
         };
     }
 
-    public static Course ToEntity(this CreateCourseInputModel inputModel)
+    public static Course ToEntity(this CreateCourseInputModel inputModel, string authordId)
     {
-        return new Course(inputModel.CourseName, inputModel.Price)
+        return new Course(inputModel.CourseName, authordId, inputModel.Price)
         {
             CourseDescription = inputModel.CourseDescription,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
         };
     }
 }

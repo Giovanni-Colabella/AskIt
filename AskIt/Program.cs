@@ -5,6 +5,7 @@ using AskIt.Models.Data.Entities;
 using AskIt.Models.Services.Application.Account;
 using AskIt.Models.Services.Application.CourseService;
 using AskIt.Models.Services.Application.ForumService;
+using AskIt.Models.Services.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -33,12 +34,12 @@ builder.Services.AddAuthorization(options =>
     // Registrazione varie policy 
 });
 // Registra Authorization Handlers
-builder.Services.AddScoped<IAuthorizationHandler, DeleteAnswerHandler>(); // Scoped perch� dipende da un servizio dbContext
+builder.Services.AddScoped<IAuthorizationHandler, DeleteAnswerHandler>(); // Scoped, dipende da un servizio dbContext
 builder.Services.AddSingleton<IAuthorizationHandler, DeleteQuestionHandler>(); // Singleton, non dipende da un servizio dbContext
+builder.Services.AddScoped<IAuthorizationHandler, EditCourseHandler>(); // Scoped, dipende da un servizio dbContext
 
 // Servizi ASP.Net 
 builder.Services.AddMemoryCache();
-builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddHttpContextAccessor();
 
 // Servizi Applicativi e Infrastrutturali
@@ -46,6 +47,7 @@ builder.Services.AddScoped<IAuthService, EfCoreAuthService>();
 builder.Services.AddScoped<IForumService, ForumService>();
 builder.Services.AddScoped<ICachedForumService, MemoryCacheForumService>();
 builder.Services.AddScoped<ICourseService, EfCoreCourseService>();
+builder.Services.AddSingleton<IImagePersister, MagickNetImagePersister>(); // Importante: singleton, contiene un semaforo
 
 var app = builder.Build();
 

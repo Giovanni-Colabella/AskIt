@@ -27,17 +27,25 @@
             {
                 <div class="col">
                     <div class="card h-100 shadow-sm">
+                        @if (!string.IsNullOrEmpty(course.CourseImage))
+                        {
+                            <img src="@course.CourseImage" class="card-img-top" alt="Immagine corso" style="height: 200px; object-fit: cover;" />
+                        }
                         <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="fas fa-graduation-cap text-secondary"></i> @course.CourseName
+                            <h5 class="card-title text-truncate" title="@course.CourseName">
+                                @course.CourseName
                             </h5>
-                            <p class="card-text">@course.CourseDescription</p>
+                            <p class="card-text text-muted">
+                                @((course.CourseDescription?.Length > 150) 
+                                    ? course.CourseDescription.Substring(0, 150) + "..." 
+                                    : course.CourseDescription)
+                            </p>
                         </div>
-                        <div class="card-footer d-flex justify-content-between">
-                            <a asp-action="Details" asp-route-id="@course.CourseId" class="btn btn-primary btn-sm">
+                        <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between">
+                            <a asp-action="Details" asp-route-id="@course.CourseId" class="btn btn-sm btn-outline-primary">
                                 <i class="fas fa-eye"></i> Dettagli
                             </a>
-                            <a asp-action="Edit" asp-route-id="@course.CourseId" class="btn btn-warning btn-sm">
+                            <a asp-action="Edit" asp-route-id="@course.CourseId" class="btn btn-sm btn-outline-warning">
                                 <i class="fas fa-edit"></i> Modifica
                             </a>
                         </div>
